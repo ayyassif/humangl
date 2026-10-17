@@ -6,10 +6,7 @@ CC  := cc
 CXXFLAGS := -O2 -std=c++17 # -Wall -Wextra
 CFLAGS   := -O2
 
-CPPFLAGS := -Isrc/math \
-            -Isrc/camera \
-            -Isrc/debugger \
-            -Isrc/input \
+CPPFLAGS := $(addprefix -I,$(shell find src -type d)) \
             -Iexternal/glad/include \
             -Iexternal/imgui \
             -Iexternal/imgui/backends

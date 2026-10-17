@@ -109,4 +109,6 @@ public:
 
 using Vec3 = Vec3T<float>;
 
+using Vec3i = Vec3T<int>;
+
 #endif

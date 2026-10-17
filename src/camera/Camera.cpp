@@ -206,34 +206,34 @@ void Camera::updateOrbitPosition()
     Position = orbitTarget - Front * orbitDistance;
 }
 
-void Camera::frameCameraOnVertices(const std::vector<Vertex>& vertices)
-{
-    if (vertices.empty())
-        return;
+// void Camera::frameCameraOnVertices(const std::vector<Vertex>& vertices)
+// {
+//     if (vertices.empty())
+//         return;
 
-    Vec3 minimum(
-        std::numeric_limits<float>::max(),
-        std::numeric_limits<float>::max(),
-        std::numeric_limits<float>::max());
-    Vec3 maximum(
-        std::numeric_limits<float>::lowest(),
-        std::numeric_limits<float>::lowest(),
-        std::numeric_limits<float>::lowest());
+//     Vec3 minimum(
+//         std::numeric_limits<float>::max(),
+//         std::numeric_limits<float>::max(),
+//         std::numeric_limits<float>::max());
+//     Vec3 maximum(
+//         std::numeric_limits<float>::lowest(),
+//         std::numeric_limits<float>::lowest(),
+//         std::numeric_limits<float>::lowest());
 
-    for (const Vertex& vertex : vertices)
-    {
-        minimum.x = std::min(minimum.x, vertex.position.x);
-        minimum.y = std::min(minimum.y, vertex.position.y);
-        minimum.z = std::min(minimum.z, vertex.position.z);
-        maximum.x = std::max(maximum.x, vertex.position.x);
-        maximum.y = std::max(maximum.y, vertex.position.y);
-        maximum.z = std::max(maximum.z, vertex.position.z);
-    }
+//     for (const Vertex& vertex : vertices)
+//     {
+//         minimum.x = std::min(minimum.x, vertex.position.x);
+//         minimum.y = std::min(minimum.y, vertex.position.y);
+//         minimum.z = std::min(minimum.z, vertex.position.z);
+//         maximum.x = std::max(maximum.x, vertex.position.x);
+//         maximum.y = std::max(maximum.y, vertex.position.y);
+//         maximum.z = std::max(maximum.z, vertex.position.z);
+//     }
 
-    const Vec3 center = (minimum + maximum) * 0.5f;
-    const float radius = (maximum - minimum).length() * 0.5f;
-    FrameOn(center, radius);
-}
+//     const Vec3 center = (minimum + maximum) * 0.5f;
+//     const float radius = (maximum - minimum).length() * 0.5f;
+//     FrameOn(center, radius);
+// }
 
 bool Camera::cameraSwitch(const bool isSwitchPressed)
 {

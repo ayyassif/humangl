@@ -6,21 +6,15 @@
 class Part
 {
 private:
-    Vec3 position;
-    Vec3 rotation;
-    Vec3 scale;
+    Mat4  model;
+    Vec3 color;
 public:
-    Part(/* args */);
-    ~Part();
+    Part();
+    Part(const Mat4& model, const Vec3& color);
+
+    Mat4 getModel() const;
+    Vec3 getColor() const;
 };
-
-Part::Part(/* args */)
-{
-}
-
-Part::~Part()
-{
-}
 
 
 #endif

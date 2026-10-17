@@ -6,14 +6,6 @@
 #include "Math.hpp"
 #include "Debugger.hpp"
 
-//tmp
-struct Vertex
-{
-    Vec3 position;
-    Vec2 texcoord;
-    int chartIndex;
-};
-
 enum Camera_Movement {
     FORWARD,
     BACKWARD,
@@ -68,7 +60,7 @@ public:
     void ProcessKeyboard(Camera_Movement direction, float deltaTime);
     void ProcessMouseMovement(Vec2 offset, bool constrainPitch = true);
     void ProcessMouseScroll(float yoffset);
-    void frameCameraOnVertices(const std::vector<Vertex>& vertices);
+    // void frameCameraOnVertices(const std::vector<Vertex>& vertices);
     bool cameraSwitch(const bool isSwitchPressed);
 
 private:
