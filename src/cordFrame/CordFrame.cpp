@@ -28,6 +28,11 @@ const Part& CordFrame::getPart() const
     return part;
 }
 
+Part& CordFrame::getPart()
+{
+    return part;
+}
+
 const std::vector<CordFrame*>& CordFrame::getChildren() const
 {
     return children;

@@ -25,6 +25,16 @@ public:
         return z;
     }
 
+    T* data()
+    {
+        return &x;
+    }
+
+    const T* data() const
+    {
+        return &x;
+    }
+
     Vec3T() : x(0), y(0), z(0) {}
     Vec3T(T value) : x(value), y(value), z(value) {}
     Vec3T(T x_, T y_, T z_) : x(x_), y(y_), z(z_) {}
@@ -105,6 +115,8 @@ public:
         z *= scalar;
         return *this;
     }
+
+    
 };
 
 using Vec3 = Vec3T<float>;

@@ -4,6 +4,9 @@
 const unsigned int SCR_WIDTH = 1920;
 const unsigned int SCR_HEIGHT = 1080;
 
+int gFramebufferWidth = static_cast<int>(SCR_WIDTH);
+int gFramebufferHeight = static_cast<int>(SCR_HEIGHT);
+
 Camera cam(Vec3(0.0f, 0.0f, 15.0f), Vec3(0.0f, 1.0f,  0.0f));
 
 bool gMouseCaptured = true;
@@ -37,6 +40,8 @@ const unsigned int indices[] = {
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
+    gFramebufferWidth = width;
+    gFramebufferHeight = height;
     glViewport(0, 0, width, height);
 }
 
@@ -158,35 +163,12 @@ void setViewProjection(const Shader &shader)
     constexpr float farPlane = 1000.0f;
     const Mat4 projection = Mat4::perspective(
         Math::radians(cam.Zoom),
-        static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT),
+        static_cast<float>(gFramebufferWidth) / static_cast<float>(std::max(1, gFramebufferHeight)),
         nearPlane,
         farPlane);
 
     const Mat4 view = cam.GetViewMatrix();
     shader.setMat4("viewProj", projection * view);
-}
-
-animations animationUI()
-{
-    static int selected = IDLE;
-    ImGui::Begin("Settings");
-
-    ImGui::Text("Animation Mode");
-
-    ImGui::RadioButton("None", &selected, NONE);
-    ImGui::SameLine();
-    ImGui::RadioButton("Idle", &selected, IDLE);
-    ImGui::SameLine();
-    ImGui::RadioButton("Run", &selected, RUN);
-    ImGui::SameLine();
-    ImGui::RadioButton("Jump", &selected, JUMP);
-    ImGui::SameLine();
-    ImGui::RadioButton("Fly", &selected, FLY);
-    ImGui::SameLine();
-    ImGui::RadioButton("Dance", &selected, DANCE);
-    
-    ImGui::End();
-    return (static_cast<animations>(selected));
 }
 
 int main()
@@ -210,6 +192,8 @@ int main()
 
     Human human;
     Input input(window);
+    BodyEditorUI bodyUI;
+    bodyUI.Init(human.getBodyFrames());
 
     while (!glfwWindowShouldClose(window))
     {
@@ -223,18 +207,13 @@ int main()
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        const animations currAnim = animationUI();
-        ImGui::Render();
+        const animations currAnim = bodyUI.Draw();
 
+        ImGui::Render();
 
         shader.use();
         glBindVertexArray(VAO);
         setViewProjection(shader);
-        Mat4 center = Mat4::model(Vec3(0.0f), 0, Vec3(0.0f, 0.0f, 1.0f),
-            Vec3(0.1));
-        shader.setMat4("model", center);
-        shader.setVec3("color", Vec3(1.0f, 0.0f, 0.0f));
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         human.playAnimation(currAnim);
         human.drawHuman(shader);
 

@@ -20,6 +20,7 @@ public:
     void addChild(CordFrame *child);
     const Mat4 &getModel() const;
     const Mat4 &getFirstModel() const;
+    Part &getPart();
     const Part &getPart() const;
     const std::vector<CordFrame*>& getChildren() const;
 

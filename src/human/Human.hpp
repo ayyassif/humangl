@@ -71,6 +71,7 @@ private:
     std::stack<Mat4> matrixS;
     BodyParts        bodyParts;
     BodyFrames       bodyFrames;
+    bool             hasReset;
     
     void drawHuman(const Shader &shader,
         const CordFrame *frame);
@@ -87,6 +88,7 @@ public:
     void drawHuman(const Shader &shader);
     void playAnimation(animations currAnim);
 
+    BodyFrames &getBodyFrames();
 };
 
 #endif

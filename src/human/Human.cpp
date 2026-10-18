@@ -26,18 +26,18 @@ const Vec3 pantsColor(54.0f, 86.0f, 160.0f);
 Vec3 tailColor(89, 31, 140);   // Purple
 Vec3 wingColor(64, 166, 217);  // Sky blue
 Vec3 hornColor(242, 191, 64);  // Golden yellow
-Human::Human()
+Human::Human() : hasReset(false)
 {
     bodyParts.head     = makePart(Vec3(0.0f, 1.0f, 0.25f), Vec3(2.0f, 2.0f, 2.0f), skinColor);
     bodyParts.torso    = makePart(Vec3(0.0f, 0.0f, 0.0f), Vec3(2.0f, 3.0f, 1.0f), tShirtColor);
     bodyParts.rUpArm   = makePart(Vec3(-0.5f, -0.25f, 0.0f), Vec3(1.0f, 1.5f, 1.0f), tShirtColor);
-    bodyParts.rForearm = makePart(Vec3(0.0f, -0.75f, 0.5f), Vec3(0.99f, 1.49f, 0.99f), skinColor);
+    bodyParts.rForearm = makePart(Vec3(0.0f, -0.75f, 0.5f), Vec3(0.999f, 1.499f, 0.999f), skinColor);
     bodyParts.lUpArm   = makePart(Vec3(0.5f, -0.25f, 0.0f), Vec3(1.0f, 1.5f, 1.0f), tShirtColor);
-    bodyParts.lForearm = makePart(Vec3(0.0f, -0.75f, 0.5f), Vec3(0.99f, 1.49f, 0.99f), skinColor);
-    bodyParts.rThigh   = makePart(Vec3(0.0f, -0.75f, 0.0f), Vec3(0.99f, 1.49f, 0.99f), pantsColor);
-    bodyParts.rLowLeg  = makePart(Vec3(0.0f, -0.75f, -0.5f), Vec3(0.99f, 1.49f, 0.99f), pantsColor);
-    bodyParts.lThigh   = makePart(Vec3(0.0f, -0.75f, 0.0f), Vec3(0.99f, 1.49f, 0.99f), pantsColor);
-    bodyParts.lLowLeg  = makePart(Vec3(0.0f, -0.75f, -0.5f), Vec3(0.99f, 1.49f, 0.99f), pantsColor);
+    bodyParts.lForearm = makePart(Vec3(0.0f, -0.75f, 0.5f), Vec3(0.999f, 1.499f, 0.999f), skinColor);
+    bodyParts.rThigh   = makePart(Vec3(0.0f, -0.75f, 0.0f), Vec3(0.999f, 1.499f, 0.999f), pantsColor);
+    bodyParts.rLowLeg  = makePart(Vec3(0.0f, -0.75f, -0.5f), Vec3(0.999f, 1.499f, 0.999f), pantsColor);
+    bodyParts.lThigh   = makePart(Vec3(0.0f, -0.75f, 0.0f), Vec3(0.999f, 1.499f, 0.999f), pantsColor);
+    bodyParts.lLowLeg  = makePart(Vec3(0.0f, -0.75f, -0.5f), Vec3(0.999f, 1.499f, 0.999f), pantsColor);
 
     bodyParts.tail1 = makePart(Vec3(0.0f, 0.0f, -0.8f), Vec3(0.65f, 0.65f, 1.6f), tailColor);
     bodyParts.tail2 = makePart(Vec3(0.0f, 0.0f, -0.65f), Vec3(0.5f, 0.5f, 1.3f), tailColor);
@@ -774,6 +774,9 @@ void Human::idle()
 
 void Human::reset()
 {
+    if (hasReset)
+        return;
+    hasReset = true;
     bodyFrames.head.setModel(bodyFrames.head.getFirstModel());
     bodyFrames.torso.setModel(bodyFrames.torso.getFirstModel());
     bodyFrames.rUpArm.setModel(bodyFrames.rUpArm.getFirstModel());
@@ -803,22 +806,27 @@ void Human::playAnimation(animations currAnim)
             reset();
             break;
         case IDLE:
+            hasReset = false;
             idle();
             break;
 
         case RUN:
+            hasReset = false;
             run();
             break;
 
         case JUMP:
+            hasReset = false;
             jump();
             break;
 
         case FLY:
+            hasReset = false;
             fly();
             break;
 
         case DANCE:
+            hasReset = false;
             dance();
             break;
     }
@@ -845,4 +853,9 @@ void Human::drawHuman(const Shader &shader, const CordFrame *frame)
         drawHuman(shader, child);
     }
     matrixS.pop();
+}
+
+BodyFrames &Human::getBodyFrames()
+{
+    return bodyFrames;
 }
