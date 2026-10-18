@@ -164,12 +164,6 @@ Human::Human()
     bodyFrames.torso.addChild(&bodyFrames.lWing);
 }
 
-void Human::drawHuman(const Shader &shader)
-{
-    drawHuman(shader, &bodyFrames.torso);
-}
-
-
 void Human::run()
 {
     static float phase = 0.0f;
@@ -657,6 +651,182 @@ void Human::dance()
         bodyFrames.lHorn.getFirstModel() *
         Mat4::rotate(Math::radians(horn), axisX)
     );
+}
+
+void Human::idle()
+{
+    static float phase = 0.0f;
+    phase += 0.03f;   // slow, calm motion
+
+    // ---- Breathing ---------------------------------------------------
+    // One breath is about 2 * PI / 0.03 = 210 frames (3.5 s at 60 fps)
+    const float breath = std::sin(phase * 1.5f);
+
+    // The torso rises slightly on the inhale. The amount is small so the
+    // feet don't visibly leave the ground.
+    bodyFrames.torso.setModel(
+        Mat4::translate(Vec3(0.0f, breath * 0.03f, 0.0f))
+    );
+
+    // ---- Head: looks around slowly, nods a little --------------------
+    const float lookYaw   = std::sin(phase * 0.4f) * 25.0f;           // left / right
+    const float lookPitch = std::sin(phase * 0.7f + 1.0f) * 5.0f - 2.0f;
+
+    bodyFrames.head.setModel(
+        bodyFrames.head.getFirstModel() *
+        Mat4::translate(Vec3(0.0f, breath * 0.02f, 0.0f)) *
+        Mat4::rotate(Math::radians(lookYaw),   Vec3(0.0f, 1.0f, 0.0f)) *
+        Mat4::rotate(Math::radians(lookPitch), Vec3(1.0f, 0.0f, 0.0f))
+    );
+
+    // ---- Arms: hang loosely and move slightly with the breath --------
+    // The left arm is a little out of phase so they don't look mirrored.
+    const float rArm = std::sin(phase * 1.5f - 0.4f) * 3.0f;
+    const float lArm = std::sin(phase * 1.5f - 0.9f) * 3.0f;
+    const float elbow = -8.0f + breath * 2.0f;
+
+    bodyFrames.rUpArm.setModel(
+        bodyFrames.rUpArm.getFirstModel() *
+        Mat4::rotate(Math::radians(rArm), Vec3(1.0f, 0.0f, 0.0f))
+    );
+    bodyFrames.lUpArm.setModel(
+        bodyFrames.lUpArm.getFirstModel() *
+        Mat4::rotate(Math::radians(lArm), Vec3(1.0f, 0.0f, 0.0f))
+    );
+    bodyFrames.rForearm.setModel(
+        bodyFrames.rForearm.getFirstModel() *
+        Mat4::rotate(Math::radians(elbow), Vec3(1.0f, 0.0f, 0.0f))
+    );
+    bodyFrames.lForearm.setModel(
+        bodyFrames.lForearm.getFirstModel() *
+        Mat4::rotate(Math::radians(elbow), Vec3(1.0f, 0.0f, 0.0f))
+    );
+
+    // ---- Legs: stand still, with a very slight knee flex -------------
+    const float knee = 3.0f + breath * 1.0f;
+
+    bodyFrames.rThigh.setModel(bodyFrames.rThigh.getFirstModel());
+    bodyFrames.lThigh.setModel(bodyFrames.lThigh.getFirstModel());
+    bodyFrames.rLowLeg.setModel(
+        bodyFrames.rLowLeg.getFirstModel() *
+        Mat4::rotate(Math::radians(knee), Vec3(1.0f, 0.0f, 0.0f))
+    );
+    bodyFrames.lLowLeg.setModel(
+        bodyFrames.lLowLeg.getFirstModel() *
+        Mat4::rotate(Math::radians(knee), Vec3(1.0f, 0.0f, 0.0f))
+    );
+
+    // ---- Wings: folded and drooping, opening a little on each inhale -
+    // positive = tips down (same convention as run/jump/fly)
+    const float wing    = 28.0f - breath * 6.0f;
+    const float wingTip = 20.0f - std::sin(phase * 1.5f - 0.7f) * 8.0f;   // tip lags
+
+    bodyFrames.rWing.setModel(
+        bodyFrames.rWing.getFirstModel() *
+        Mat4::rotate(Math::radians(wing), Vec3(0.0f, 0.0f, 1.0f))
+    );
+    bodyFrames.rWingTip.setModel(
+        bodyFrames.rWingTip.getFirstModel() *
+        Mat4::rotate(Math::radians(wingTip), Vec3(0.0f, 0.0f, 1.0f))
+    );
+    bodyFrames.lWing.setModel(
+        bodyFrames.lWing.getFirstModel() *
+        Mat4::rotate(Math::radians(-wing), Vec3(0.0f, 0.0f, 1.0f))
+    );
+    bodyFrames.lWingTip.setModel(
+        bodyFrames.lWingTip.getFirstModel() *
+        Mat4::rotate(Math::radians(-wingTip), Vec3(0.0f, 0.0f, 1.0f))
+    );
+
+    // ---- Tail: slow lazy sway, a wave travels from base to tip -------
+    const float tailLift = 5.0f + std::sin(phase * 0.8f) * 3.0f;
+
+    bodyFrames.tail1.setModel(
+        bodyFrames.tail1.getFirstModel() *
+        Mat4::rotate(Math::radians(std::sin(phase * 1.2f)        * 10.0f), Vec3(0.0f, 1.0f, 0.0f)) *
+        Mat4::rotate(Math::radians(tailLift),                               Vec3(1.0f, 0.0f, 0.0f))
+    );
+    bodyFrames.tail2.setModel(
+        bodyFrames.tail2.getFirstModel() *
+        Mat4::rotate(Math::radians(std::sin(phase * 1.2f - 0.7f) * 14.0f), Vec3(0.0f, 1.0f, 0.0f))
+    );
+    bodyFrames.tail3.setModel(
+        bodyFrames.tail3.getFirstModel() *
+        Mat4::rotate(Math::radians(std::sin(phase * 1.2f - 1.4f) * 18.0f), Vec3(0.0f, 1.0f, 0.0f))
+    );
+
+    // ---- Horns: occasional twitch ------------------------------------
+    // The sine is raised to a high power, so it is nearly 0 most of the time
+    // and spikes briefly, giving an occasional twitch instead of a constant wobble.
+    const float twitchBase = std::sin(phase * 0.5f);
+    const float twitch     = std::pow(std::max(0.0f, twitchBase), 12.0f);
+    const float horn       = twitch * std::sin(phase * 25.0f) * 6.0f;
+
+    bodyFrames.rHorn.setModel(
+        bodyFrames.rHorn.getFirstModel() *
+        Mat4::rotate(Math::radians(horn), Vec3(1.0f, 0.0f, 0.0f))
+    );
+    bodyFrames.lHorn.setModel(
+        bodyFrames.lHorn.getFirstModel() *
+        Mat4::rotate(Math::radians(-horn), Vec3(1.0f, 0.0f, 0.0f))
+    );
+}
+
+void Human::reset()
+{
+    bodyFrames.head.setModel(bodyFrames.head.getFirstModel());
+    bodyFrames.torso.setModel(bodyFrames.torso.getFirstModel());
+    bodyFrames.rUpArm.setModel(bodyFrames.rUpArm.getFirstModel());
+    bodyFrames.rForearm.setModel(bodyFrames.rForearm.getFirstModel());
+    bodyFrames.lUpArm.setModel(bodyFrames.lUpArm.getFirstModel());
+    bodyFrames.lForearm.setModel(bodyFrames.lForearm.getFirstModel());
+    bodyFrames.rThigh.setModel(bodyFrames.rThigh.getFirstModel());
+    bodyFrames.rLowLeg.setModel(bodyFrames.rLowLeg.getFirstModel());
+    bodyFrames.lThigh.setModel(bodyFrames.lThigh.getFirstModel());
+    bodyFrames.lLowLeg.setModel(bodyFrames.lLowLeg.getFirstModel());
+    bodyFrames.tail1.setModel(bodyFrames.tail1.getFirstModel());
+    bodyFrames.tail2.setModel(bodyFrames.tail2.getFirstModel());
+    bodyFrames.tail3.setModel(bodyFrames.tail3.getFirstModel());
+    bodyFrames.lHorn.setModel(bodyFrames.lHorn.getFirstModel());
+    bodyFrames.rHorn.setModel(bodyFrames.rHorn.getFirstModel());
+    bodyFrames.rWing.setModel(bodyFrames.rWing.getFirstModel());
+    bodyFrames.lWing.setModel(bodyFrames.lWing.getFirstModel());
+    bodyFrames.rWingTip.setModel(bodyFrames.rWingTip.getFirstModel());
+    bodyFrames.lWingTip.setModel(bodyFrames.lWingTip.getFirstModel());
+}
+
+void Human::playAnimation(animations currAnim)
+{
+    switch (currAnim)
+    {
+        case NONE:
+            reset();
+            break;
+        case IDLE:
+            idle();
+            break;
+
+        case RUN:
+            run();
+            break;
+
+        case JUMP:
+            jump();
+            break;
+
+        case FLY:
+            fly();
+            break;
+
+        case DANCE:
+            dance();
+            break;
+    }
+}
+
+void Human::drawHuman(const Shader &shader)
+{
+    drawHuman(shader, &bodyFrames.torso);
 }
 
 void Human::drawHuman(const Shader &shader, const CordFrame *frame)

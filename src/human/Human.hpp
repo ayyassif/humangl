@@ -55,6 +55,16 @@ struct BodyFrames
     CordFrame lWingTip; // left   wing tip
 };
 
+enum animations
+{
+    NONE,
+    IDLE,
+    RUN,
+    JUMP,
+    FLY,
+    DANCE
+};
+
 class Human
 {
 private:
@@ -64,14 +74,19 @@ private:
     
     void drawHuman(const Shader &shader,
         const CordFrame *frame);
-public:
-    Human();
 
-    void drawHuman(const Shader &shader);
     void run();
     void jump();
     void fly();
     void dance();
+    void idle();
+    void reset();
+public:
+    Human();
+
+    void drawHuman(const Shader &shader);
+    void playAnimation(animations currAnim);
+
 };
 
 #endif

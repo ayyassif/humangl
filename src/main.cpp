@@ -166,6 +166,29 @@ void setViewProjection(const Shader &shader)
     shader.setMat4("viewProj", projection * view);
 }
 
+animations animationUI()
+{
+    static int selected = IDLE;
+    ImGui::Begin("Settings");
+
+    ImGui::Text("Animation Mode");
+
+    ImGui::RadioButton("None", &selected, NONE);
+    ImGui::SameLine();
+    ImGui::RadioButton("Idle", &selected, IDLE);
+    ImGui::SameLine();
+    ImGui::RadioButton("Run", &selected, RUN);
+    ImGui::SameLine();
+    ImGui::RadioButton("Jump", &selected, JUMP);
+    ImGui::SameLine();
+    ImGui::RadioButton("Fly", &selected, FLY);
+    ImGui::SameLine();
+    ImGui::RadioButton("Dance", &selected, DANCE);
+    
+    ImGui::End();
+    return (static_cast<animations>(selected));
+}
+
 int main()
 {
     GLFWwindow *window = initiate();
@@ -197,6 +220,13 @@ int main()
         glClearColor(0.12f, 0.15f, 0.19f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+        const animations currAnim = animationUI();
+        ImGui::Render();
+
+
         shader.use();
         glBindVertexArray(VAO);
         setViewProjection(shader);
@@ -205,9 +235,10 @@ int main()
         shader.setMat4("model", center);
         shader.setVec3("color", Vec3(1.0f, 0.0f, 0.0f));
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-        human.dance();
+        human.playAnimation(currAnim);
         human.drawHuman(shader);
 
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(window);
     }
 
