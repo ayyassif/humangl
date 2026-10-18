@@ -1,10 +1,8 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
-#include <vector>
 #include <algorithm>
 #include "Math.hpp"
-#include "Debugger.hpp"
 
 enum Camera_Movement {
     FORWARD,
@@ -55,29 +53,18 @@ public:
 
     Mat4 GetViewMatrix() const;
     void FrameOn(const Vec3& center, float radius);
-    void SetMode(CameraMode newMode);
-    CameraMode GetMode() const;
     void ProcessKeyboard(Camera_Movement direction, float deltaTime);
     void ProcessMouseMovement(Vec2 offset, bool constrainPitch = true);
     void ProcessMouseScroll(float yoffset);
-    // void frameCameraOnVertices(const std::vector<Vertex>& vertices);
-    bool cameraSwitch(const bool isSwitchPressed);
 
 private:
     bool isSprinting;
-    CameraMode mode;
     Vec3 orbitTarget;
     float orbitDistance;
     float maxOrbitDistance;
-    Vec3 initialPosition;
-    float initialYaw;
-    float initialPitch;
-    float initialZoom;
-    bool  cameraModePressedLastFrame;
 
     void updateCameraVectors();
     void updateOrbitPosition();
-    void resetToInitialView();
 
 };
 

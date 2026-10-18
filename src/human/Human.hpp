@@ -1,9 +1,11 @@
 #ifndef HUMAN_HPP
 #define HUMAN_HPP
 
+#include <stack>
+#include "Shader.hpp"
 #include "CordFrame.hpp"
 #include "Part.hpp"
-#include "Vec3.hpp"
+#include "Math.hpp"
 
 struct BodyParts
 {
@@ -19,32 +21,34 @@ struct BodyParts
     Part lLowLeg;   // left  leg lower part
 };
 
+struct BodyFrames
+{
+    CordFrame head;
+    CordFrame torso;
+    CordFrame rUpArm;   // right upper arm
+    CordFrame rForearm; // right forearm
+    CordFrame lUpArm;   // left upper arm
+    CordFrame lForearm; // left forearm
+    CordFrame rThigh;   // right thigh
+    CordFrame rLowLeg;  // right lower leg
+    CordFrame lThigh;   // left thigh
+    CordFrame lLowLeg;  // left lower leg
+};
+
 class Human
 {
 private:
-    CordFrame cordTree;
+    std::stack<Mat4> matrixS;
+    BodyParts        bodyParts;
+    BodyFrames       bodyFrames;
     
+    void drawHuman(const Shader &shader,
+        const CordFrame *frame);
 public:
     Human();
-    
-    BodyParts bodyParts;    
+
+    void drawHuman(const Shader &shader);
+    void run();
 };
-
-// CordFrame* createLimbs(Vec3 color)
-// {
-    
-// }
-
-Human::Human()
-{
-    bodyParts.torso = Part(
-        Mat4::model(
-            Vec3(0.0f),
-            0.0f,
-            Vec3(0.0f),
-            Vec3(8.0f, 12.0f, 4.0f)
-        ),
-        Vec3(40.0f, 118.0f, 184.0f));
-}
 
 #endif

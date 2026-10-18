@@ -57,7 +57,7 @@ Mat4 Mat4::scale(const Vec3& scale)
 	return result;
 }
 
-Mat4 Mat4::rotate(float angle, const Vec3& axis)
+Mat4 Mat4::rotate(const float angle, const Vec3& axis)
 {
     Vec3 a = axis.normalize();
 

@@ -2,7 +2,7 @@
 
 Part::Part() {}
 
-Part::Part(const Mat4& model, const Vec3& color) : model(model), color(color) {}
+Part::Part(const Mat4& model, const Vec3& color) : model(model), color(color / 255) {}
 
 Vec3 Part::getColor() const
 {

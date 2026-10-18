@@ -8,27 +8,22 @@
 class CordFrame
 {
 private:
-    std::vector<CordFrame> children;
+    std::vector<CordFrame*> children;
 
     Part part;
     Mat4 model;
+    Mat4 firstModel;
 public:
     CordFrame();
     CordFrame(const Mat4& model, Part part);
 
-    void addChild(const CordFrame &child);
+    void addChild(CordFrame *child);
+    const Mat4 &getModel() const;
+    const Mat4 &getFirstModel() const;
+    const Part &getPart() const;
+    const std::vector<CordFrame*>& getChildren() const;
+
+    void setModel(const Mat4& model);
 };
-
-CordFrame::CordFrame() {}
-
-CordFrame::CordFrame(const Mat4& model, Part part)
-    : model(model),
-      part(part)
-{}
-
-void CordFrame::addChild(const CordFrame &child)
-{
-    children.push_back(child);
-}
 
 #endif

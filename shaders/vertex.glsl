@@ -3,9 +3,9 @@
 layout (location = 0) in vec3 aPos;
 
 uniform mat4 model;
-uniform mat4 mvp;
+uniform mat4 viewProj;
 
 void main()
 {
-    gl_Position = mvp * vec4(aPos, 1.0);
+    gl_Position = viewProj * model * vec4(aPos, 1.0);
 }

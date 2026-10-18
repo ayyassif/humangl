@@ -1,9 +1,15 @@
 #include "humangl.hpp"
+#include <array>
 
 const unsigned int SCR_WIDTH = 1920;
 const unsigned int SCR_HEIGHT = 1080;
 
-Camera cam(Vec3(0.0f, 0.0f,  3.0f), Vec3(0.0f, 1.0f,  0.0f));
+Camera cam(Vec3(0.0f, 0.0f, 15.0f), Vec3(0.0f, 1.0f,  0.0f));
+
+bool gMouseCaptured = true;
+bool gTabPressedLastFrame = false;
+
+#include "Camera.hpp"
 
 Vec3 vertices[] = {
     // 0-3: Back face (z = -0.5)
@@ -61,6 +67,50 @@ void setupVertexBuffers()
     DEBUG::SUCCESS << "Vertex buffers configured" << std::endl;
 }
 
+void processInput(GLFWwindow *window, Input &input, Camera &cam)
+{
+    const float deltaTime = Math::getDeltaTime();
+
+    if (input.getKeyPressed(GLFW_KEY_ESCAPE))
+    {
+        glfwSetWindowShouldClose(window, true);
+        DEBUG::INPUT << "Exit requested" << std::endl;
+    }
+
+    const bool tabHeld = input.getKeyPressed(GLFW_KEY_TAB);
+    if (tabHeld && !gTabPressedLastFrame)
+    {
+        gMouseCaptured = !gMouseCaptured;
+        if (gMouseCaptured)
+        {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            glfwSetCursorPos(window, SCR_WIDTH / 2.0, SCR_HEIGHT / 2.0);
+            input.resetMouseState();
+        }
+        else
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+        DEBUG::INPUT << "Mouse capture " << (gMouseCaptured ? "enabled" : "disabled")
+                 << std::endl;
+    }
+    gTabPressedLastFrame = tabHeld;
+
+    constexpr std::array<std::pair<int, Camera_Movement>, 6> movementKeys = {{
+        {GLFW_KEY_W, FORWARD},
+        {GLFW_KEY_S, BACKWARD},
+        {GLFW_KEY_D, RIGHT},
+        {GLFW_KEY_A, LEFT},
+        {GLFW_KEY_SPACE, UP},
+        {GLFW_KEY_LEFT_SHIFT, DOWN}
+    }};
+
+    for (const auto& [key, movement] : movementKeys)
+    {
+        if (input.getKeyPressed(key))
+            cam.ProcessKeyboard(movement, deltaTime);
+    }
+}
+
 GLFWwindow *initiate()
 {
     DEBUG::INFO << "Initializing GLFW" << std::endl;
@@ -102,15 +152,8 @@ GLFWwindow *initiate()
     return createdWindow;
 }
 
-void drawCube(Shader &shader, Human &human)
+void setViewProjection(const Shader &shader)
 {
-    shader.use();
-    glBindVertexArray(VAO);
-
-    const Mat4 model = human.bodyParts.torso.getModel();
-    shader.setMat4("model", model);
-    shader.setVec3("color", human.bodyParts.torso.getColor());
-
     constexpr float nearPlane = 0.1f;
     constexpr float farPlane = 1000.0f;
     const Mat4 projection = Mat4::perspective(
@@ -120,10 +163,7 @@ void drawCube(Shader &shader, Human &human)
         farPlane);
 
     const Mat4 view = cam.GetViewMatrix();
-    const Mat4 mvp = projection * view * model;
-    shader.setMat4("mvp", mvp);
-
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+    shader.setMat4("viewProj", projection * view);
 }
 
 int main()
@@ -146,15 +186,27 @@ int main()
     setupVertexBuffers();
 
     Human human;
+    Input input(window);
 
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
 
+        processInput(window, input, cam);
+
         glClearColor(0.12f, 0.15f, 0.19f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        drawCube(shader, human);
+        shader.use();
+        glBindVertexArray(VAO);
+        setViewProjection(shader);
+        Mat4 center = Mat4::model(Vec3(0.0f), 0, Vec3(0.0f, 0.0f, 1.0f),
+            Vec3(0.1));
+        shader.setMat4("model", center);
+        shader.setVec3("color", Vec3(1.0f, 0.0f, 0.0f));
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        human.run();
+        human.drawHuman(shader);
 
         glfwSwapBuffers(window);
     }
