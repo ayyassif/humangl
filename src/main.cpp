@@ -205,7 +205,7 @@ int main()
         shader.setMat4("model", center);
         shader.setVec3("color", Vec3(1.0f, 0.0f, 0.0f));
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-        human.run();
+        human.dance();
         human.drawHuman(shader);
 
         glfwSwapBuffers(window);
