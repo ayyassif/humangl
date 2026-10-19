@@ -1,7 +1,11 @@
 #ifndef BODY_EDITOR_HPP
 #define BODY_EDITOR_HPP
 
-#include "humangl.hpp"
+#include <vector>
+#include <string>
+
+#include "Human.hpp"
+#include "imgui.h"
 
 struct PartUI {
     const char* name;

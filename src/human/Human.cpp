@@ -190,7 +190,10 @@ void Human::run()
     // Two bounces per cycle, body is lowest at mid-stance (when thighs are vertical)
     const float bob = -std::cos(phase * 2.0f) * 0.10f;
 
-    bodyFrames.torso.setModel(Mat4::translate(Vec3(0.0f, bob, 0.0f)));
+    bodyFrames.torso.setModel(
+        bodyFrames.torso.getFirstModel() *
+        Mat4::translate(Vec3(0.0f, bob, 0.0f))
+    );
     bodyFrames.head.setModel(
         bodyFrames.head.getFirstModel() *
         Mat4::translate(Vec3(0.0f, bob * 0.5f, 0.0f))
@@ -383,7 +386,10 @@ void Human::jump()
         : 2.0f * legLen * (1.0f - std::cos(Math::radians(knee * 0.5f)));
 
     // ---- Torso and head ----------------------------------------------
-    bodyFrames.torso.setModel(Mat4::translate(Vec3(0.0f, height - drop, 0.0f)));
+    bodyFrames.torso.setModel(
+        bodyFrames.torso.getFirstModel() *
+        Mat4::translate(Vec3(0.0f, height - drop, 0.0f))
+    );
     bodyFrames.head.setModel(bodyFrames.head.getFirstModel());
 
     // ---- Arms (both move together) -----------------------------------
@@ -447,6 +453,7 @@ void Human::fly()
     const float lean = 20.0f + std::sin(phase) * 4.0f;
 
     bodyFrames.torso.setModel(
+        bodyFrames.torso.getFirstModel() *
         Mat4::translate(Vec3(0.0f, hover, 0.0f)) *
         Mat4::rotate(Math::radians(lean), axisX)
     );
@@ -554,6 +561,7 @@ void Human::dance()
 
     // ---- Torso: hip sway, twist and roll -----------------------------
     bodyFrames.torso.setModel(
+        bodyFrames.torso.getFirstModel() *
         Mat4::translate(Vec3(side * 0.15f, -drop, 0.0f)) *
         Mat4::rotate(Math::radians(-side * 14.0f), axisY) *   // twist
         Mat4::rotate(Math::radians(-side * 6.0f),  axisZ)     // roll
@@ -665,6 +673,7 @@ void Human::idle()
     // The torso rises slightly on the inhale. The amount is small so the
     // feet don't visibly leave the ground.
     bodyFrames.torso.setModel(
+        bodyFrames.torso.getFirstModel() *
         Mat4::translate(Vec3(0.0f, breath * 0.03f, 0.0f))
     );
 
