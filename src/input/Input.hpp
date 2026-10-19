@@ -7,11 +7,6 @@
 
 class Input
 {
-private:
-    bool firstMouse;
-    Vec2 lastMouse;
-    bool tabPressedLastFrame;
-    bool mouseCaptured;
 public:
     GLFWwindow *window;
 
@@ -19,12 +14,6 @@ public:
     Input(GLFWwindow *window);
 
     bool getKeyPressed(int key) const;
-    bool getKeyReleased(int key) const;
-    bool isMouseCaptured() const;
-    void resetMouseState();
-
-    Vec2 calculateMouseDelta(float xpos, float ypos);
-    void processTabExit(const int &width, const int &height);
 };
 
 #endif

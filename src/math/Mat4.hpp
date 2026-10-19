@@ -23,9 +23,6 @@ public:
     static Mat4 translate(const Vec3& position);
     static Mat4 scale(const Vec3& scale);
     static Mat4 rotate(const float angle, const Vec3& axis);
-    static Mat4 rotationX(float angle);
-    static Mat4 rotationY(float angle);
-    static Mat4 rotationZ(float angle);
     static Mat4 model(
         const Vec3& trans = Vec3(0.0f),
         float angle = 0.0f,

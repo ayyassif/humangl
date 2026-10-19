@@ -18,9 +18,14 @@ const Mat4& CordFrame::getModel() const
     return model;
 }
 
-const Mat4& CordFrame::getFirstModel() const
+Mat4 CordFrame::getFirstModel() const
 {
-    return firstModel;
+    return firstModel * Mat4::scale(scale);
+}
+
+const Vec3 &CordFrame::getScale() const
+{
+    return scale;
 }
 
 const Part& CordFrame::getPart() const
@@ -41,4 +46,10 @@ const std::vector<CordFrame*>& CordFrame::getChildren() const
 void CordFrame::setModel(const Mat4& model)
 {
     this->model = model;
+}
+
+void CordFrame::setScale(const Vec3& newScale)
+{
+    scale = newScale;
+    model = getFirstModel();
 }

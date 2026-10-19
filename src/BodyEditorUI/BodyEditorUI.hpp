@@ -25,10 +25,8 @@ public:
         p.frame->getPart().setColor(p.color);
     }
     void ApplySize(PartUI& p) {
-        p.frame->setModel(
-            p.frame->getFirstModel() *
-            Mat4::scale(p.size)
-        );
+        p.frame->setScale(p.size);
+        p.frame->setModel(p.frame->getFirstModel());
     }
     // -----------------------------
 
@@ -92,6 +90,7 @@ public:
     if (ImGui::Button("Reset this part")) {
         for (int i = 0; i < 3; ++i) p.color[i] = p.frame->getPart().getFirstColor()[i];
         for (int i = 0; i < 3; ++i) p.size[i]  = 1.0f;
+        p.frame->setScale(Vec3(1.0f));
         p.frame->setModel(p.frame->getFirstModel());
         ApplyColor(p);
     }
@@ -100,6 +99,7 @@ public:
         for (PartUI& part : parts) {
             for (int i = 0; i < 3; ++i) part.color[i] = part.frame->getPart().getFirstColor()[i];
             for (int i = 0; i < 3; ++i) part.size[i] = 1.0f;
+            part.frame->setScale(Vec3(1.0f));
             part.frame->setModel(part.frame->getFirstModel());
             ApplyColor(part);
         }

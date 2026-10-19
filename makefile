@@ -3,8 +3,8 @@ NAME := humangl
 CXX := c++
 CC  := cc
 
-CXXFLAGS := -O2 -std=c++17 # -Wall -Wextra
-CFLAGS   := -O2
+CXXFLAGS := -O2 -std=c++17 -fPIE # -Wall -Wextra
+CFLAGS   := -O2 -fPIE
 
 CPPFLAGS := $(addprefix -I,$(shell find src -type d)) \
             -Iexternal/glad/include \

@@ -94,45 +94,6 @@ Mat4 Mat4::rotate(const float angle, const Vec3& axis)
     return result;
 }
 
-Mat4 Mat4::rotationX(float angle)
-{
-	Mat4 result = Mat4::identity();
-	const float c = std::cos(angle);
-	const float s = std::sin(angle);
-
-	result[1][1] = c;
-	result[1][2] = -s;
-	result[2][1] = s;
-	result[2][2] = c;
-	return result;
-}
-
-Mat4 Mat4::rotationY(float angle)
-{
-	Mat4 result = Mat4::identity();
-	const float c = std::cos(angle);
-	const float s = std::sin(angle);
-
-	result[0][0] = c;
-	result[0][2] = s;
-	result[2][0] = -s;
-	result[2][2] = c;
-	return result;
-}
-
-Mat4 Mat4::rotationZ(float angle)
-{
-	Mat4 result = Mat4::identity();
-	const float c = std::cos(angle);
-	const float s = std::sin(angle);
-
-	result[0][0] = c;
-	result[0][1] = -s;
-	result[1][0] = s;
-	result[1][1] = c;
-	return result;
-}
-
 Mat4 Mat4::model(
     const Vec3& trans,
     float angle,

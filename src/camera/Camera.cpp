@@ -14,7 +14,6 @@ Camera::Camera(
     float yaw, float pitch
 )
     : MovementSpeed(SPEED),
-    MouseSensitivity(SENSITIVITY),
     Zoom(ZOOM),
     Position(position),
     WorldUp(up),
@@ -34,21 +33,6 @@ Camera::Camera(
 Mat4 Camera::GetViewMatrix() const
 {
     return Mat4::lookAt(Position, Position + Front, Up);
-}
-
-void Camera::FrameOn(const Vec3& center, float radius)
-{
-    const float safeRadius = radius > 0.0f ? radius : 1.0f;
-    const float halfFov = Math::radians(Zoom) * 0.5f;
-    const float distance = safeRadius / std::sin(halfFov) * 1.2f;
-
-    orbitTarget = center;
-    orbitDistance = distance;
-    maxOrbitDistance = distance * 3.0f;
-    Yaw = YAW;
-    Pitch = PITCH;
-    updateCameraVectors();
-    updateOrbitPosition();
 }
 
 void Camera::ProcessKeyboard(Camera_Movement direction, float deltaTime)
@@ -97,29 +81,11 @@ void Camera::ProcessKeyboard(Camera_Movement direction, float deltaTime)
     updateOrbitPosition();
 }
 
-void Camera::ProcessMouseMovement(Vec2 offset, bool constrainPitch)
-{
-    offset.x *= MouseSensitivity;
-    offset.y *= MouseSensitivity;
-
-    Yaw   += offset.x;
-    Pitch += offset.y;
-
-    if (constrainPitch)
-    {
-        if (Pitch > 89.0f)
-            Pitch = 89.0f;
-        if (Pitch < -89.0f)
-            Pitch = -89.0f;
-    }
-    updateCameraVectors();
-    updateOrbitPosition();
-}
-
 void Camera::ProcessMouseScroll(float yoffset)
 {
-    orbitDistance = std::clamp(orbitDistance - yoffset * MovementSpeed,
-                                0.1f, maxOrbitDistance);
+    const float zoomStep = 0.75f;
+    orbitDistance = std::clamp(orbitDistance - yoffset * zoomStep,
+                              0.1f, maxOrbitDistance);
     updateOrbitPosition();
 }
 

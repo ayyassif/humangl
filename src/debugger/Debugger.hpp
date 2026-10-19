@@ -39,12 +39,6 @@ public:
     using StreamManipulator = std::ostream& (*)(std::ostream&);
     Debugger& operator<<(StreamManipulator manipulator);
 
-    static void printWelcome();
-    static void printControls();
-    static void printAvailableModes();
-    static void cameraModeChanged(std::string_view modeName);
-    static void renderModeChanged(std::string_view modeName);
-
 private:
     static constexpr std::string_view RESET = "\033[0m";
 
