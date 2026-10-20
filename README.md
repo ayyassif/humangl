@@ -1,83 +1,66 @@
+
 # humangl
 
-A small OpenGL + Dear ImGui project for animating a stylized humanoid creature with a live body editor. The app renders a custom character, supports animation states, and exposes a UI for tweaking part colors and sizes in real time.
+**humangl** is a lightweight OpenGL project that brings a stylized humanoid creature to life through hierarchical modeling, procedural animations, and real-time customization.
+
+Built with OpenGL and Dear ImGui, the project features an interactive 3D character whose body parts, proportions, and colors can be adjusted through a live editor while animations run in real time.
 
 ## Overview
 
-This project combines:
+The project explores the fundamentals of 3D graphics and character animation, combining:
 
-- OpenGL rendering for the character and scene
-- GLFW for window and input management
-- GLAD for OpenGL loading
-- Dear ImGui for the live editor UI
-- A custom transform hierarchy for body parts, limbs, wings, and tail
+- **OpenGL** for 3D rendering
+- **GLFW** for window creation and input handling
+- **GLAD** for OpenGL function loading
+- **Dear ImGui** for the interactive body editor
+- **Custom transform hierarchy** for organizing and animating body parts
 
-The goal is to make the creature feel alive by blending skeletal transforms, simple animation cycles, and real-time tuning controls.
+The goal is to create an interactive character using hierarchical transformations, simple animation systems, and real-time editing tools without relying on a full game engine.
 
 ## Features
 
-- Custom humanoid body built from connected `CordFrame` transforms
-- Multiple animation modes including idle, run, jump, fly, and dance
-- Real-time manipulation of limb scale and color through the body editor UI
-- Camera movement and orbit-style model inspection
-- Shader-based rendering pipeline with custom GLSL files
-- Lightweight modular structure organized by system and object type
+- **Hierarchical modeling** — A custom humanoid character assembled from connected `CordFrame` transforms.
+- **Multiple animations** — Idle, running, jumping, flying, and dancing animation modes.
+- **Live body editor** — Adjust body-part proportions, sizes, and colors in real time.
+- **Camera controls** — Rotate, inspect, zoom, and navigate around the 3D model.
+- **Custom shaders** — GLSL vertex and fragment shaders for rendering.
+- **Modular architecture** — Separate components for the character, camera, input, transformations, rendering, and user interface.
 
-## Project structure
+## Build and Run
 
-```text
-.
-├── README.md
-├── makefile
-├── humangl                  # built binary
-├── imgui.ini                # ImGui window layout state
-├── shaders/
-│   ├── fragment.glsl
-│   └── vertex.glsl
-├── src/
-│   ├── main.cpp
-│   ├── humangl.hpp
-│   ├── app/
-│   ├── BodyEditorUI/
-│   ├── camera/
-│   ├── cordFrame/
-│   ├── cubeMesh/
-│   ├── debugger/
-│   ├── human/
-│   ├── input/ain your hierarchical model and
-│   ├── math/
-│   ├── part/
-│   └── shader/
-├── external/
-│   ├── glad/
-│   └── imgui/
-├── glad/
-│   ├── include/
-│   └── src/
-└── build/
-```
+### Requirements
 
-## Build
+- A C++ compiler supporting C++17
+- GNU Make
+- OpenGL
+- GLFW
+- The project's GLAD and Dear ImGui dependencies
 
-From the project root:
+### Compile
+
+From the project root, run:
 
 ```bash
 make
 ```
 
-Then run:
+### Run
+
+After a successful build, launch the application with:
 
 ```bash
 ./humangl
 ```
 
-## Clean build artifacts
+### Clean
+
+Remove intermediate build artifacts:
 
 ```bash
 make clean
 ```
 
-To remove the binary as well:
+Remove build artifacts and the compiled executable:
 
 ```bash
 make fclean
@@ -85,44 +68,56 @@ make fclean
 
 ## Controls
 
-The app exposes live interaction through the mouse and keyboard, and the ImGui editor allows changes to the character while it animates.
+Interact with the character using the mouse and keyboard. The Dear ImGui editor provides additional controls for customizing the model.
 
-Typical interactions include:
-
-- Mouse drag to rotate the model
-- Mouse scroll to zoom the cameraain your hierarchical model and
-- WASD movement for camera navigation
-- Space / Shift for vertical movement
-- Escape to exit
+| Input | Action |
+|---|---|
+| Mouse drag | Rotate the model |
+| Mouse scroll | Zoom in and out |
+| W / A / S / D | Move the camera |
+| Space / Shift | Move vertically |
+| Escape | Exit the application |
 
 ## Gallery
-
-Use this section to add screenshots, gifs, and recordings of the project as it evolves.
 
 ### Body Editor
 
 ![Body Editor](gallery/body_editor.gif)
 
-### Idle Pose
+Customize the character's body parts and appearance through the interactive editor.
 
-![Idle Pose](gallery/Idle.gif)
+### Animations
 
-### Running Animation
+**Idle Pose**
+
+![Idle Animation](gallery/Idle.gif)
+
+**Running**
 
 ![Running Animation](gallery/Run.gif)
 
-### Jump Sequence
+**Jumping**
 
-![Jump Sequence](gallery/Jump.gif)
+![Jump Animation](gallery/Jump.gif)
 
-### Flight Mode
+**Flying**
 
-![Flight Mode](gallery/Fly.gif)
+![Flight Animation](gallery/Fly.gif)
 
-### Default Pose
+**Default Pose**
 
 ![Default Pose](gallery/None.gif)
 
-## Notes
+## About the Project
 
-This project is intentionally lightweight and educational: it is built around direct OpenGL calls and simple custom math utilities rather than a large engine framework. It is a good fit for experimenting with animation, transform hierarchies, and UI-driven editing.
+humangl is an educational graphics project focused on understanding how 3D characters can be constructed, transformed, and animated from the ground up.
+
+Rather than relying on a large engine or an existing character-animation framework, it uses direct OpenGL rendering and custom mathematical utilities to explore:
+
+- Hierarchical transformations and parent-child relationships
+- Character construction from individual 3D components
+- Animation through transform updates
+- Interactive parameter editing with Dear ImGui
+- The relationship between rendering, input, and animation systems
+
+The project serves as a foundation for experimenting with 3D graphics, character animation, and real-time visual tools.
