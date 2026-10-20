@@ -40,7 +40,8 @@ public:
     if (!open) return static_cast<animations>(anim);
 
     ImGui::SetNextWindowSize(ImVec2(520, 440), ImGuiCond_FirstUseEver);
-    if (!ImGui::Begin("Body Editor", &open)) {
+    ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoCollapse;
+    if (!ImGui::Begin("Body Editor", nullptr, windowFlags)) {
         ImGui::End();
         return static_cast<animations>(anim);
     }
