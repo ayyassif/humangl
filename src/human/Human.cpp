@@ -23,9 +23,9 @@ const Vec3 skinColor(70.0f, 42.0f, 28.0f);
 const Vec3 tShirtColor(40.0f, 118.0f, 184.0f);
 const Vec3 pantsColor(54.0f, 86.0f, 160.0f);
 
-Vec3 tailColor(89, 31, 140);   // Purple
-Vec3 wingColor(64, 166, 217);  // Sky blue
-Vec3 hornColor(242, 191, 64);  // Golden yellow
+const Vec3 tailColor(89, 31, 140);
+const Vec3 wingColor(64, 166, 217);
+const Vec3 hornColor(242, 191, 64);
 Human::Human() : hasReset(false)
 {
     bodyParts.head     = makePart(Vec3(0.0f, 1.0f, 0.25f), Vec3(2.0f, 2.0f, 2.0f), skinColor);
@@ -49,7 +49,7 @@ Human::Human() : hasReset(false)
     bodyParts.lWingTip = makePart(Vec3(1.0f, 0.0f, -0.5f), Vec3(2.0f, 0.06f, 1.0f), wingColor);
 
     bodyParts.rHorn = makePart(Vec3(0.0f, 0.3f, 0.0f), Vec3(0.25f, 0.6f, 0.25f), hornColor);
-    bodyParts.lHorn = bodyParts.rHorn;
+    bodyParts.lHorn = makePart(Vec3(0.0f, 0.3f, 0.0f), Vec3(0.25f, 0.6f, 0.25f), hornColor);
 
     bodyFrames.torso = CordFrame(
         Mat4::identity(),

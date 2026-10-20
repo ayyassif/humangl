@@ -99,35 +99,29 @@ Typical interactions include:
 
 Use this section to add screenshots, gifs, and recordings of the project as it evolves.
 
+### Body Editor
+
+![Body Editor](gallery/body_editor.gif)
+
 ### Idle Pose
 
-```text
-assets/gallery/idle-pose.png
-```
+![Idle Pose](gallery/Idle.gif)
 
 ### Running Animation
 
-```text
-assets/gallery/running-animation.gif
-```
+![Running Animation](gallery/Run.gif)
 
 ### Jump Sequence
 
-```text
-assets/gallery/jump-sequence.gif
-```
+![Jump Sequence](gallery/Jump.gif)
 
 ### Flight Mode
 
-```text
-assets/gallery/fly-mode.gif
-```
+![Flight Mode](gallery/Fly.gif)
 
-### Body Editor
+### Default Pose
 
-```text
-assets/gallery/body-editor.png
-```
+![Default Pose](gallery/None.gif)
 
 ## Notes
 
