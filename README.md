@@ -104,6 +104,10 @@ Customize the character's body parts and appearance through the interactive edit
 
 ![Flight Animation](gallery/Fly.gif)
 
+**Dancing**
+
+![Dance Animation](gallery/Dance.gif)
+
 **Default Pose**
 
 ![Default Pose](gallery/None.gif)
